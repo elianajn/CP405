@@ -208,3 +208,20 @@ The language of a context-free grammar is the set of all strings that:
   3. V ∩ Σ = ∅
   4. S is an element of V ; it is called the start variable
   5. R is a finite set, whose elements are called rules. Each rule has the form A→w, where A ∈ V and w ∈ (V ∪Σ)∗
+
+## **3.5: Pushdown automata**
+the class of languages that can be accepted by these automata is exactly the class of context-free languages
+* There is a *tape* which is divided into *cells*. Each cell stores a symbol belonging to a finite set Σ, called the *tape alphabet*. The blank symbol [] is not contained in Σ. If that is in a cell then the cell is empty
+* The *tape head* reads the current cell and moves one to the right per move.
+* There is a *stack* containing symbols from a finite set Γ, called the *stack alphabet*. This set contains a special symbol $.
+* The *stack head* can read the top symbol of the stack. The head can pop the top symbol off the stack and can push symbols of Γ onto the stack.
+* There is a *state control* which can be in any one of a finite number of states. The set of states Q contains one special state q, called the start state.
+* The input for a pushdown automaton is a string in Σ*. This input string is stored on the tape of the pushdown automaton and, initially, the tape head is on the leftmost symbol of the input string. Initially, the stack only contains the special symbol $, and the pushdown automaton is in the start state q. In one computation step, the pushdown automata does:
+  1. Assume it to be in state r. Let a be the symbol of Σ that is read by the tape head, and let A be the symbol of Γ that is on top of the stack
+  2. Depending on the current state r, the tape symbol a, and the stack symbol A,
+    1. The pushdown automaton switches to a state r′ of Q (which may be equal to r)
+    2. the tape head either moves one cell to the right or stays at the current cell, and
+    3. the top symbol A is replaced by a string w that belongs to Γ∗. To be more precise,
+      i. f w = ǫ, then A is popped from the stack, whereas
+      ii. if w = B1B2 ...Bk, with k ≥ 1 and B1,B2,...,Bk ∈ Γ, then A is replaced by w, and Bk becomes the new top symbol of the stack.
+  

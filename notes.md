@@ -358,3 +358,68 @@ A CFG is in CNF if each production rule is one of the following forms:
 If you want a string that you know to be 3 symbols, you need to expand A twice (lose one add two), then three steps to replace the variables with the terminals.
 <mark>finite</mark>
 Since there is no transition to epsilon, this is EXACTLY the number of steps required
+___
+# **Day 7**
+#### **Pushdown automata**
+![](assets/markdown-img-paste-20220301100135539.png)
+The PDA can use its stack to remember things (unlike DFA/NFAs!)
+* **Stack: The stack is not limited in size, can get arbitrarily large. It is separate from the states in the *state control***
+
+To accept the string:
+* We have to get to the end of the stack
+* Our pointer must be at the end of the string (well, one past in that whitespace)
+
+If you see anything left when you're at the end of the stack, REJECT!
+What if you give it 0101? When it hits the second 0, it should know that it's no longer in the start state so it would reject.
+> **Pushdown automata Definition**
+  * Σ = tape alphabet
+  * Γ = stack alphabet (contains $)
+  * Q = finite set of states
+  * q<sub>0</sub> = the start state
+  * = transition function
+  __Q x (Σ u {□}) x Γ -> Q x {N,R} x Γ*__
+  Pick either N (no movement) or R (move the pointer one cell to the right)
+  0 or more junk from the stack alphabet. If nothing is pushed, the stack gets smaller bc one was popped with the first Γ. You can put an arbitrary amount of symbols onto the stack during each step.
+
+> __Pushdown Automata Instructions__
+  Given:
+  * q,q' E Q
+  * a E Σ
+  * a' E {N,R}
+  * g E Γ
+  * g' E Γ*
+Function assignment:
+* <mark> FINISH THIS SHIT WTF</mark>
+
+**PDA Language:** Given PDA, M, its language is given by
+  L(M) = {w : <mark>finish</mark>}
+
+#### **Non-deterministic PDA Definition**
+__Q x (Σ u {□}) x Γ -> P(Q x {N,R} x Γ*)__ where P is the powerset
+It's like running multiple copies of the machine at the same time
+
+#### **Context-free pumping lemma**
+Let L be a CFL. There exists an integer, p >= 1.
+Then every s E L with |s| >= p can be written as s = uvxyz
+1. |vy| >= 1
+2. |vxy| <= p
+3. For all i >= 0, uv<sup>i</sup>xy<sup>i</sup>z E L
+When we do a variable expansion, we could have expanded it different ways
+
+![](assets/markdown-img-paste-20220301114201953.png)
+Everything that occurs before the repeated variables is u, and everything after is z
+Everything the upper variable expands to is vxy
+The lower variable expands to x
+Must have a repeated variable R because we chose a long string.
+**Parse tree height vs string length**
+If the height is greater than the number of variables, there must be a repeated variable
+Three things you think about: length of the string, height of the tree, and number of variables
+|w| <= 2<sup>h-1</sup>
+**Choose pumping length**
+Go back to the number of variables, r
+Set pumping length p = 2<sup>r</sup>
+This forces h > r
+Pick the repeated variables that are the two that are furthest down the longest path on the parse tree
+Both occurrences must be in the last r+1 variables of the path (because there are only r variables total)
+The top one at the highest can be at r+1
+We are guaranteed to get a repeat |w| steps up in the parse tree 
