@@ -224,4 +224,84 @@ the class of languages that can be accepted by these automata is exactly the cla
     3. the top symbol A is replaced by a string w that belongs to Γ∗. To be more precise,
       i. f w = ǫ, then A is popped from the stack, whereas
       ii. if w = B1B2 ...Bk, with k ≥ 1 and B1,B2,...,Bk ∈ Γ, then A is replaced by w, and Bk becomes the new top symbol of the stack.
-  
+
+## **Chapter 4: Turing machines**
+> **Definition**
+**A deterministic TM is a 7-tuple, M = (Σ, Γ, Q, δ, q, q<sub>accept</sub>, q<sub>reject</sub>)**
+* There are k tapes for some k >= 1. Each tape is divided into cells and is infinite to both the left and right.
+* The tape alphabet Γ contains the blank symbol
+* Each tape has a tape head that can move one cell per move
+* The state control can be in any one of a finite number of states (Q). Q always contains:
+  1. start state
+  2. accept state
+  3. reject state
+* The Turing machine performs a sequence of computation steps. In one such step, it does the following:
+  1. the TM is in a state r of Q, and each of the k tape heads are on a certain cell
+  2. Depending on r and the k symbols,
+    * the TM switches to a state r' of Q (could still be r)
+    * each tape head writes a symbol of Γ in the cell it is currently scanning (can be the same symbol as before)
+    * each head either moves one to the right, left, or stays at the current cell
+
+**Start configuration :** the input is a string over the alphabet Σ. The input string is stored on the first tape, and the head is on the leftmost symbol. All other k-1 tapes are empty and the TM is in the state state q.
+**Computation and termination:** the computation terminates when the TM enters the accept state or reject state. If it never enters one of these states, the computation will never terminate.
+**Acceptance:** The TM accepts the input string if the computation on this input terminates in the accept state. A string does not belong to L(M) iff:
+* the computation of M terminates in the reject state or
+* the computation of M does not terminate
+
+___Palindrome example___
+**Idea:** The tape head reads the leftmost symbol of w, deletes this symbol and “remembers” it by means of a state. Then the tape head moves to the rightmost symbol and tests whether it is equal to the (already deleted) leftmost symbol.
+* If they are equal, then the rightmost symbol is deleted, the tape head moves to the new leftmost symbol, and the whole process is repeated.
+* If they are not equal, the Turing machine enters the reject state, and the computation terminates.
+* The Turing machine enters the accept state as soon as the string currently stored on the tape is empty.
+
+___Palindrome example with two tapes___
+**Idea:** The input string is copied to the second tape. The head of the first tape moves back to the leftmost symbol, while the head of the second stays at the right most. Then both heads move inward at the same rate, comparing symbols at each move.
+
+| STATE | INSTRUCTIONS |
+| ----------- | ----------- |
+| q<sub>0</sub>  | the start state, copy w to the second tape |
+| q<sub>1</sub> | w has been copied; head of first tape moves to the left |
+| q<sub>2</sub> | head of first tape moves to the right; head of second tape moves to the left; until now, all tests were positive |
+| q<sub>accept</sub>  | accept state |
+| q<sub>reject</sub> |  reject state |
+|Transition function | ![](assets/markdown-img-paste-2022030214520705.png) |
+
+___Accepting a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> using tape alphabet {a, b, c, [ ]}___
+**Idea:** Repeat the following Stages 1 and 2, until the string is empty.
+1. Walk along the string from left to right, delete the leftmost a, delete the leftmost b, and delete the rightmost c.
+| STATE | INSTRUCTIONS |
+| ----------- | ----------- |
+| q<sub>0</sub>  | the start state; tape head is on the leftmost symbol |
+| q<sub>a</sub> | leftmost a has been deleted; have not read b |
+| q<sub>b</sub> | leftmost b has been deleted; have not read c |
+| q<sub>c</sub> | leftmost c has been deleted; tape head moves to the right |
+| q'<sub>c</sub> | tape head is on rightmost c |
+| q<sub>1</sub> | rightmost c has been deleted; tape head is on rightmost symbol or [ ] |
+| q<sub>accept</sub>  | accept state |
+| q<sub>reject</sub> |  reject state |
+| Transitions | ![](assets/markdown-img-paste-20220302150042467.png) |
+2. Shift the substring of bs and cs one position to the left; then walk back to the leftmost symbol.
+| STATE | INSTRUCTIONS |
+| ----------- | ----------- |
+| q<sub>1</sub>  | as above; tape head is on the rightmost symbol or on [ ] |
+| q<sup>c</sup> | copy c one cell to the left |
+| q<sup>b</sup> | copy b one cell to the left |
+| q<sub>2</sub> | done with shifting; head moves to the left |
+| q'<sub>1</sub> | If the input string is in the from a<sup>i</sup>bc for some i >= 1, then after state 1 the tape contains the string a<sup>i-1</sup>[][], the tape head is on the [] immediately to the right of the as, and the TM is in state 1<sub>1</sub>. Then, move one cell to the left; if we read [], then i=1 and we accept; otherwise (we read a) reject |
+| Transitions | ![](assets/markdown-img-paste-20220302150300130.png) |
+
+## **Multi-tape Turning machines**
+MTTM are NOT more powerful than single tape ones. Any k-tape Turing machine can be converted to an equivalent one-tape Turing machine.
+
+## **The Church-Turing Thesis**
+***The following computation models are equivalent, i.e., any one of them can be converted to any other one:***
+1. One-tape Turing machines
+2. k-tape Turing machines, for any k ≥ 1.
+3. Non-deterministic Turing machines
+4. Java programs
+5. C++ programs
+6. Lisp programs
+
+**Church-Turing Thesis:** Every computational process that is intuitively considered to be an algorithm can be converted to a Turing machine. Basically we define an algorithm to be a Turing machine.
+
+## **One dimensional cellular automata**
